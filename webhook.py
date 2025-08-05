@@ -396,35 +396,64 @@ def process_klaviyo_order(klaviyo_data):
         print("Error processing Klaviyo order: {}".format(error))
         return {"error": str(error)}, 500
 
-# Vercel handler function  
-def handler(request, response):
+# Vercel handler function
+def handler(request):
     """Vercel serverless function handler"""
-    # Set CORS headers
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    from http.server import BaseHTTPRequestHandler
+    import json
     
+    # Handle CORS preflight
     if request.method == 'OPTIONS':
-        response.status_code = 200
-        return ''
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type'
+            },
+            'body': ''
+        }
         
+    # Only allow POST requests
     if request.method != 'POST':
-        response.status_code = 405
-        return json.dumps({"error": "Method not allowed"})
+        return {
+            'statusCode': 405,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps({"error": "Method not allowed"})
+        }
     
     try:
-        # Handle both application/json and application/x-www-form-urlencoded
-        if hasattr(request, 'get_json'):
-            klaviyo_data = request.get_json()
+        # Parse the request body
+        if hasattr(request, 'body'):
+            if isinstance(request.body, bytes):
+                body = request.body.decode('utf-8')
+            else:
+                body = request.body
+            klaviyo_data = json.loads(body)
         else:
-            # For Vercel Python runtime
-            import json
-            klaviyo_data = json.loads(request.body)
+            klaviyo_data = request.json
             
         result = process_klaviyo_order(klaviyo_data)
-        response.status_code = 200
-        return json.dumps(result)
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(result)
+        }
+        
     except Exception as error:
         print("Handler error: {}".format(error))
-        response.status_code = 500
-        return json.dumps({"error": "Handler error: {}".format(str(error))})
+        return {
+            'statusCode': 500,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps({"error": "Handler error: {}".format(str(error))})
+        }
