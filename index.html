@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Attribution System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .status {
+            background-color: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .endpoint {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        code {
+            background-color: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sales Attribution System</h1>
+        
+        <div class="status">
+            <h3>🟢 System Status: Online</h3>
+            <p>The sales attribution system is deployed and running. This system processes BigCommerce orders and attributes them to NetSuite sales representatives.</p>
+        </div>
+
+        <h3>Available Endpoints:</h3>
+        
+        <div class="endpoint">
+            <h4>Webhook Endpoint</h4>
+            <p><strong>URL:</strong> <code>/api/webhook</code></p>
+            <p><strong>Method:</strong> POST</p>
+            <p><strong>Purpose:</strong> Receives webhooks from BigCommerce for real-time order processing</p>
+        </div>
+
+        <div class="endpoint">
+            <h4>Status Endpoint</h4>
+            <p><strong>URL:</strong> <code>/api/status</code></p>
+            <p><strong>Method:</strong> GET</p>
+            <p><strong>Purpose:</strong> Returns system status and component health</p>
+            <p><a href="/api/status" target="_blank">Test Status Endpoint →</a></p>
+        </div>
+
+        <h3>System Components:</h3>
+        <ul>
+            <li><strong>BigCommerce Integration:</strong> Fetches order data from multiple stores</li>
+            <li><strong>NetSuite Integration:</strong> Searches for sales representative assignments</li>
+            <li><strong>Google Sheets:</strong> Records attribution data for reporting</li>
+            <li><strong>Scheduled Processing:</strong> Daily automated runs for order attribution</li>
+        </ul>
+
+        <h3>Features:</h3>
+        <ul>
+            <li>Multi-store BigCommerce support</li>
+            <li>Real-time webhook processing</li>
+            <li>Automated sales rep attribution</li>
+            <li>Google Sheets reporting</li>
+            <li>Duplicate order detection</li>
+        </ul>
+
+        <div style="margin-top: 30px; text-align: center; color: #666;">
+            <p><small>Sales Attribution System v1.0.0</small></p>
+        </div>
+    </div>
+</body>
+</html> 
