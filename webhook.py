@@ -396,15 +396,35 @@ def process_klaviyo_order(klaviyo_data):
         print("Error processing Klaviyo order: {}".format(error))
         return {"error": str(error)}, 500
 
-# Vercel handler function
-def handler(request):
+# Vercel handler function  
+def handler(request, response):
     """Vercel serverless function handler"""
+    # Set CORS headers
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    
+    if request.method == 'OPTIONS':
+        response.status_code = 200
+        return ''
+        
     if request.method != 'POST':
-        return {"error": "Method not allowed"}, 405
+        response.status_code = 405
+        return json.dumps({"error": "Method not allowed"})
     
     try:
-        klaviyo_data = request.get_json()
-        return process_klaviyo_order(klaviyo_data)
+        # Handle both application/json and application/x-www-form-urlencoded
+        if hasattr(request, 'get_json'):
+            klaviyo_data = request.get_json()
+        else:
+            # For Vercel Python runtime
+            import json
+            klaviyo_data = json.loads(request.body)
+            
+        result = process_klaviyo_order(klaviyo_data)
+        response.status_code = 200
+        return json.dumps(result)
     except Exception as error:
         print("Handler error: {}".format(error))
-        return {"error": "Handler error: {}".format(str(error))}, 500
+        response.status_code = 500
+        return json.dumps({"error": "Handler error: {}".format(str(error))})
